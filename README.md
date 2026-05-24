@@ -21,7 +21,10 @@ You can also tell the skill to watch out for specific things at analysis time:
 
 > "Flag anything that requires French language"  
 > "Note if the role requires a work visa"  
-> "Mark as ❌ any roles that are fully on-site"
+> "Mark as ❌ any roles that are fully on-site"  
+> "I can only work in these countries without a visa: UK, US, Canada"  
+> "Prefer remote or hybrid only"  
+> "Flag if travel is required"
 
 ---
 
