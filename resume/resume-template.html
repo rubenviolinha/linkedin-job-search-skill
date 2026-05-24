@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name – Resume</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            font-size: 10.5pt;
+            color: #1a1a1a;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 44px 52px;
+            line-height: 1.5;
+        }
+        h1 {
+            font-size: 28pt;
+            font-weight: normal;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 10.5pt;
+            color: #555;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .contact {
+            text-align: center;
+            font-size: 9.5pt;
+            color: #555;
+            margin-bottom: 16px;
+        }
+        .contact a { color: #555; text-decoration: none; }
+        hr {
+            border: none;
+            border-top: 1.5px solid #1a1a1a;
+            margin: 12px 0;
+        }
+        .summary {
+            text-align: center;
+            font-size: 10pt;
+            color: #333;
+            margin: 14px 8px 18px 8px;
+            line-height: 1.6;
+        }
+        h2 {
+            font-size: 10pt;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 22px 0 12px 0;
+            font-weight: bold;
+        }
+        .job { margin-bottom: 16px; }
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .company { font-weight: bold; font-size: 10.5pt; }
+        .dates { font-size: 9.5pt; color: #555; white-space: nowrap; }
+        .role {
+            font-style: italic;
+            font-size: 10pt;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        ul { margin-left: 16px; margin-top: 4px; }
+        li { margin-bottom: 3px; font-size: 10pt; }
+        strong { font-weight: bold; }
+        .subrole { margin-top: 8px; }
+        .inline-dates { font-style: normal; font-size: 9.5pt; color: #666; }
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-top: 22px;
+            border-top: 1.5px solid #1a1a1a;
+            padding-top: 16px;
+        }
+        .bottom-section h3 {
+            font-size: 9.5pt;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .bottom-section p {
+            font-size: 9.5pt;
+            text-align: center;
+            line-height: 1.7;
+            color: #333;
+        }
+        @media print { body { padding: 24px 36px; } }
+    </style>
+</head>
+<body>
+
+    <h1>Your Name</h1>
+    <p class="subtitle">Your Title / Specialisation</p>
+    <p class="contact">
+        your.email@example.com &nbsp;·&nbsp; +XX XXX XXX XXXX &nbsp;·&nbsp;
+        <a href="https://www.linkedin.com/in/yourprofile">linkedin.com/in/yourprofile</a>
+        &nbsp;·&nbsp; City, Country
+    </p>
+
+    <hr>
+    <p class="summary">
+        Two to three sentence professional summary. Describe your core expertise, what you bring to organisations,
+        and the type of roles you are targeting. Keep it concise and impactful.
+    </p>
+    <hr>
+
+    <h2>Professional Experience</h2>
+
+    <!-- Grouped company with multiple roles -->
+    <div class="job">
+        <div class="job-header">
+            <span class="company">Company Name</span>
+            <span class="dates">Jan 2022 – Present</span>
+        </div>
+
+        <div class="subrole">
+            <p class="role">Senior Role Title <span class="inline-dates">(Jan 2024 – Present)</span></p>
+            <ul>
+                <li>Achievement or responsibility. Quantify where possible — <strong>X% improvement</strong> or <strong>$Y saved</strong>.</li>
+                <li>Cross-functional project or initiative you led.</li>
+                <li>Tool, methodology, or process you introduced.</li>
+            </ul>
+        </div>
+
+        <div class="subrole">
+            <p class="role">Previous Role Title <span class="inline-dates">(Jan 2022 – Jan 2024)</span></p>
+            <ul>
+                <li>Key responsibility or accomplishment.</li>
+                <li>Another bullet demonstrating scope or impact.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Single-role company -->
+    <div class="job">
+        <div class="job-header">
+            <span class="company">Previous Company</span>
+            <span class="dates">Mar 2019 – Dec 2021</span>
+        </div>
+        <p class="role">Role Title</p>
+        <ul>
+            <li>Accomplishment with measurable outcome.</li>
+            <li>Process or system you improved or built.</li>
+            <li>Collaboration across teams or stakeholders.</li>
+        </ul>
+    </div>
+
+    <!-- Earlier role (brief) -->
+    <div class="job">
+        <div class="job-header">
+            <span class="company">Earlier Company</span>
+            <span class="dates">Jun 2017 – Feb 2019</span>
+        </div>
+        <p class="role">Role Title</p>
+        <ul>
+            <li>One or two key contributions from this role.</li>
+        </ul>
+    </div>
+
+    <!-- Bottom grid -->
+    <div class="bottom-grid">
+        <div class="bottom-section">
+            <h3>Key Skills</h3>
+            <p>
+                Skill One<br>
+                Skill Two<br>
+                Skill Three<br>
+                Skill Four<br>
+                Tool / Software<br>
+                Methodology
+            </p>
+        </div>
+        <div class="bottom-section">
+            <h3>Education</h3>
+            <p>
+                University Name<br>
+                Degree · Year<br>
+                <br>
+                University Name<br>
+                Degree · Year
+            </p>
+        </div>
+        <div class="bottom-section">
+            <h3>Languages</h3>
+            <p>
+                English – Fluent<br>
+                Language 2 – Level<br>
+                Language 3 – Level
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
