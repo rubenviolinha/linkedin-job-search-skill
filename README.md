@@ -18,7 +18,7 @@ The job analyzer reads your resume to understand your profile — no manual setu
 
 You can also tell the skill to watch out for specific things at analysis time:
 
-> "Flag anything that requires Norwegian"  
+> "Flag anything that requires French language"  
 > "Note if the role requires a work visa"  
 > "Mark as ❌ any roles that are fully on-site"
 

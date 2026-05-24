@@ -34,7 +34,7 @@ If the user has stated preferences in their message (e.g. "I want to stay in Lon
 
 Users can also ask the skill to watch out for specific things at analysis time:
 
-> "Flag anything that requires Norwegian"  
+> "Flag anything that requires French language"  
 > "Note if the role requires a work visa"  
 > "Mark as ❌ any roles that are fully on-site"
 
