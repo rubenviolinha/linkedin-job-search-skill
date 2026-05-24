@@ -90,6 +90,8 @@ Notes are idempotent — re-running overwrites existing ones. If a run crashes m
 
 `resume/resume-template.html` is a clean, single-page HTML resume template. Open it in any browser, fill in your details, then **Print → Save as PDF** to export.
 
+If you already have a resume PDF, that works too — the job analyzer skill only needs your profile details from `job-analyzer/SKILL.md`, not an actual resume file.
+
 ## Session management
 
 - Session stored at `~/.claude/linkedin-session.json` — outside the repo, gitignored
