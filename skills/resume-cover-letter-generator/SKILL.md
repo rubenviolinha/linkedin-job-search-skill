@@ -1,3 +1,14 @@
+---
+name: resume-cover-letter-generator
+description: "Generate tailored resumes and cover letters as PDFs for job applications. Takes job URLs or job analyzer results and creates customized documents. Use to batch-process top job picks."
+metadata:
+  author: rubenviolinha
+  version: "1.0"
+  type: utility
+  mode: assistive
+  domain: career
+---
+
 # resume-cover-letter-generator
 
 Generates tailored resumes and cover letters for targeted job applications.

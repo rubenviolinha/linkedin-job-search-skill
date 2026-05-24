@@ -3,3 +3,4 @@ package-lock.json
 *.json.bak
 linkedin-session.json
 .DS_Store
+output/
