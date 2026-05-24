@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter - {{COMPANY_NAME}}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 8.5in;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            background-color: white;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .date {
+            margin-bottom: 5px;
+        }
+
+        .recipient {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .recipient p {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .greeting {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .body {
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+
+        .body p {
+            margin: 0 0 12px 0;
+            text-align: justify;
+        }
+
+        .closing {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .closing p {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .signature {
+            margin-top: 35px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .name {
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="date">{{DATE}}</div>
+    </div>
+
+    <div class="recipient">
+        <p>Hiring Manager</p>
+        <p>{{COMPANY_NAME}}</p>
+    </div>
+
+    <div class="greeting">
+        <p>Dear Hiring Manager,</p>
+    </div>
+
+    <div class="body">
+        <p>{{OPENING_PARAGRAPH}}</p>
+
+        <p>{{BODY_PARAGRAPH_1}}</p>
+
+        <p>{{BODY_PARAGRAPH_2}}</p>
+    </div>
+
+    <div class="closing">
+        <p>Thank you for considering my application. I'd welcome the opportunity to discuss how my background in {{RELEVANT_AREA}} aligns with {{COMPANY_NAME}}'s goals.</p>
+
+        <p>Best regards,</p>
+    </div>
+
+    <div class="signature">
+        <p class="name">{{USER_NAME}}</p>
+        <p>{{EMAIL}}</p>
+        <p>{{PHONE}}</p>
+        <p>{{LINKEDIN_URL}}</p>
+    </div>
+</body>
+</html>
