@@ -110,55 +110,107 @@ if (!hasJobs) {
   process.exit(0);
 }
 
-function extractSearchJobs() {
-  return page.evaluate(() => {
-    const seen = new Set();
-    const results = [];
-    document.querySelectorAll('a[href*="/jobs/view/"]').forEach(a => {
-      const url = a.href.split('?')[0];
-      if (seen.has(url)) return;
-      seen.add(url);
+// Capture base URL (includes geoId after location filter) for URL-based pagination
+const baseSearchUrl = page.url().split('&start=')[0].split('?start=')[0];
+console.log(`Base search URL: ${baseSearchUrl}`);
 
-      let container = a;
-      for (let i = 0; i < 8; i++) {
-        container = container.parentElement;
-        if (!container) break;
-        if (container.querySelectorAll('p').length >= 2) break;
-      }
+async function scrapeCurrentPage() {
+  await page.waitForTimeout(2000);
 
-      const allP = container
-        ? Array.from(container.querySelectorAll('p')).map(p => p.innerText?.trim()).filter(Boolean)
-        : [];
+  const cardCount = await page.locator('div.ba4d4009').count();
+  console.log(`  Found ${cardCount} cards`);
+  const jobs = [];
 
-      const title    = allP[0] || a.innerText?.trim() || '';
-      const company  = allP[1] || '';
-      const location = allP[2] || '';
-      const posted   = allP[3] || '';
-      const easyApply = container ? !!container.querySelector('svg#linkedin-bug-small') : false;
+  for (let i = 0; i < cardCount; i++) {
+    const card = page.locator('div.ba4d4009').nth(i);
 
-      if (title && url) results.push({ title, company, location, url, easyApply, posted });
+    // Extract static text from card HTML using stable class-based selectors
+    const cardData = await card.evaluate(el => {
+      // Title: p with c4b61232 class — prefer aria-hidden span for clean text
+      const titleEl = el.querySelector('p[class*="c4b61232"] span[aria-hidden="true"]')
+                   || el.querySelector('p[class*="c4b61232"]');
+      // Company: p with _210f0453 class
+      const companyEl = el.querySelector('p[class*="_210f0453"]');
+      // Location: p that has both _50917d1d and ba6a2084 (not the company p)
+      const locationEl = el.querySelector('p[class*="_50917d1d"][class*="ba6a2084"]');
+      const easyApply = !!el.querySelector('svg#linkedin-bug-small');
+      // Posted: span[aria-hidden="true"] in the bottom metadata section
+      const postedSpans = Array.from(el.querySelectorAll('span[aria-hidden="true"]'));
+      const postedSpan = postedSpans.find(s => /\d+\s+(day|week|month|hour)/i.test(s.innerText));
+
+      return {
+        title: titleEl?.innerText?.trim() || '',
+        company: companyEl?.innerText?.trim() || '',
+        location: locationEl?.innerText?.trim() || '',
+        easyApply,
+        posted: postedSpan?.innerText?.trim() || '',
+      };
     });
-    return results;
-  });
+
+    if (!cardData.title) continue;
+
+    // Check if card already has an anchor href (some cards do)
+    const anchorUrl = await card.evaluate(el => {
+      const a = el.querySelector('a[href*="/jobs/view/"]');
+      return a ? a.href.split('?')[0].replace(/\/apply\/?$/, '') : null;
+    });
+
+    let jobUrl = anchorUrl;
+
+    // If no anchor, click card and wait for currentJobId in URL to change
+    if (!jobUrl) {
+      try {
+        const prevJobId = new URL(page.url()).searchParams.get('currentJobId') || '';
+        await card.click();
+        // Wait until the URL reflects a *new* job ID (not just any)
+        await page.waitForFunction(
+          (prev) => {
+            const id = new URL(window.location.href).searchParams.get('currentJobId');
+            return id && id !== prev;
+          },
+          prevJobId,
+          { timeout: 6000 }
+        ).catch(() => {});
+        // Small settle delay so the right panel has started loading
+        await page.waitForTimeout(600);
+        const currentUrl = page.url();
+        const jobIdMatch = currentUrl.match(/currentJobId=(\d+)/);
+        if (jobIdMatch) jobUrl = `https://www.linkedin.com/jobs/view/${jobIdMatch[1]}/`;
+      } catch (_) { /* card may have been removed or navigated away */ }
+    }
+
+    if (jobUrl && cardData.title) {
+      jobs.push({ ...cardData, url: jobUrl });
+    }
+  }
+
+  return jobs;
 }
 
 const allJobs = [];
 let pageNum = 1;
 
-while (pageNum <= maxPages) {
-  console.log(`Scraping page ${pageNum}...`);
-  await page.waitForTimeout(1000);
+try {
+  while (pageNum <= maxPages) {
+    console.log(`\nScraping page ${pageNum}...`);
+    // Paginate via URL (avoids triggering anti-bot from button clicks)
+    if (pageNum > 1) {
+      const start = (pageNum - 1) * 25;
+      await page.goto(`${baseSearchUrl}&start=${start}`, {
+        waitUntil: 'domcontentloaded', timeout: 15000,
+      }).catch(() => {});
+      await page.waitForSelector('div.ba4d4009', { timeout: 10000, state: 'attached' }).catch(() => {});
+    }
 
-  const jobs = await extractSearchJobs();
-  console.log(`  ${jobs.length} jobs found`);
-  allJobs.push(...jobs);
+    const jobs = await scrapeCurrentPage();
+    console.log(`  ${jobs.length} jobs extracted`);
+    allJobs.push(...jobs);
 
-  const nextBtn = page.locator('[data-testid="pagination-controls-next-button-visible"]');
-  if ((await nextBtn.count()) === 0 || pageNum >= maxPages) break;
-
-  await nextBtn.click();
-  await page.waitForSelector('a[href*="/jobs/view/"]', { timeout: 10000, state: 'attached' }).catch(() => {});
-  pageNum++;
+    if (pageNum >= maxPages) break;
+    pageNum++;
+  }
+} catch (err) {
+  console.log(`Scraping stopped at page ${pageNum}: ${err.message}`);
 }
 
 // Deduplicate across pages
@@ -168,5 +220,5 @@ console.log(`\nTotal unique jobs scraped: ${deduped.length}`);
 console.log('\n=== SEARCH RESULTS ===');
 console.log(JSON.stringify(deduped, null, 2));
 
-await context.storageState({ path: sessionFile });
-await browser.close();
+await context.storageState({ path: sessionFile }).catch(() => {});
+await browser.close().catch(() => {});
