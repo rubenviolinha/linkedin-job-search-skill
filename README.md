@@ -12,16 +12,9 @@ You open LinkedIn and see the assessment on every card. No copying, no pasting, 
 
 ---
 
-## Before you start: fill in your profile
+## Before you start: have your resume ready
 
-The job analyzer needs to know who you are before it can assess anything. Open `skills/job-analyzer/SKILL.md` and fill in the **User Profile** section:
-
-```
-Name, current role, key achievements, background, previous roles,
-education, languages, job preferences
-```
-
-This is what the skill uses to judge fit. Be specific — the more detail you add, the more accurate the analysis.
+The job analyzer reads your resume to understand your profile — no manual setup needed. When you run `/job-analyzer`, it will ask you to share your resume if you haven't already. You can paste the text, attach the file, or share the HTML.
 
 You can also tell the skill to watch out for specific things at analysis time:
 
@@ -38,8 +31,6 @@ You can also tell the skill to watch out for specific things at analysis time:
 ```bash
 cp -r skills/* ~/.claude/skills/
 ```
-
-Then edit `~/.claude/skills/job-analyzer/SKILL.md` with your profile details (see above).
 
 ### 2 — Install the scraper dependencies
 
