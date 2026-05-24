@@ -1,42 +1,47 @@
 # linkedin-job-search-skill
 
-A [Claude Code](https://claude.ai/code) skill that automates your LinkedIn job search: scrapes your saved jobs, analyzes each one against your profile, and writes a verdict directly onto every job card — so you can see the assessment without leaving LinkedIn.
+Two [Claude Code](https://claude.ai/code) skills that automate your LinkedIn job search end-to-end.
 
-## How it works
+Run `/linkedin-jobs-fetch` in Claude Code and it will:
+1. Scrape all your saved jobs from the LinkedIn jobs tracker
+2. Fetch and read every actual job description
+3. Analyze each role against your profile — domain fit, seniority, location, custom flags
+4. Write a short verdict directly as a note on each job card in LinkedIn
 
-1. **Scrapes** your saved jobs from the LinkedIn jobs tracker using Playwright
-2. **Fetches** the actual job description for every role (no title-only guesses)
-3. **Analyzes** each JD against your profile: domain fit, seniority, location, language requirements
-4. **Writes a one-line verdict** as a note on each job card in your LinkedIn tracker
+You open LinkedIn and see the assessment on every card. No copying, no pasting, no tab-switching.
 
-## Skills
+---
 
-| Skill | Trigger | What it does |
-|-------|---------|-------------|
-| `linkedin-jobs-fetch` | `/linkedin-jobs-fetch` | Runs the Playwright scraper, handles login and pagination, writes notes back to LinkedIn |
-| `job-analyzer` | `/job-analyzer` | Fetches all JDs in parallel, rates fit against your profile, flags language blockers |
+## Before you start: fill in your profile
 
-Use them together: `/linkedin-jobs-fetch` to pull and analyze your saved jobs, notes land directly on each card.
+The job analyzer needs to know who you are before it can assess anything. Open `skills/job-analyzer/SKILL.md` and fill in the **User Profile** section:
 
-## Prerequisites
+```
+Name, current role, key achievements, background, previous roles,
+education, languages, job preferences
+```
 
-| Tool | Install |
-|------|---------|
-| **Node.js 18+** | [nodejs.org](https://nodejs.org) — check with `node --version` |
-| **Playwright + Chromium** | `cd scraper && npm install && npx playwright install chromium` |
-| **Claude Code** | `npm install -g @anthropic-ai/claude-code` |
+This is what the skill uses to judge fit. Be specific — the more detail you add, the more accurate the analysis.
 
-## Setup
+You can also tell the skill to watch out for specific things at analysis time:
 
-### 1 — Install the skills
+> "Flag anything that requires Norwegian"  
+> "Note if the role requires a work visa"  
+> "Mark as ❌ any roles that are fully on-site"
+
+---
+
+## Installation
+
+### 1 — Install the Claude Code skills
 
 ```bash
 cp -r skills/* ~/.claude/skills/
 ```
 
-Open `~/.claude/skills/job-analyzer/SKILL.md` and fill in your own details where the `[YOUR ...]` placeholders are — your background, the roles you're targeting, and any language preferences for the country you're applying in.
+Then edit `~/.claude/skills/job-analyzer/SKILL.md` with your profile details (see above).
 
-### 2 — Install scraper dependencies
+### 2 — Install the scraper dependencies
 
 ```bash
 cd scraper
@@ -44,29 +49,33 @@ npm install
 npx playwright install chromium
 ```
 
-### 3 — First login
+**Requirements:** Node.js 18+ ([nodejs.org](https://nodejs.org))
 
-The first time you run the scraper, a Chromium window opens at the LinkedIn login page. Log in, wait until you reach `linkedin.com/feed`, then signal the script from a second terminal:
+### 3 — First-time LinkedIn login
+
+The first time you run the scraper, a browser window opens at the LinkedIn login page. Log in, wait until you reach `linkedin.com/feed`, then run this in a second terminal to signal that you're in:
 
 ```bash
 touch /tmp/linkedin-ready
 ```
 
-Your session is saved to `~/.claude/linkedin-session.json` (gitignored — never committed). All future runs skip this step.
+Your session is saved to `~/.claude/linkedin-session.json` (gitignored — never committed). All future runs skip the login step entirely.
+
+---
 
 ## Usage
 
-In Claude Code, just run:
+In Claude Code:
 
 ```
 /linkedin-jobs-fetch
 ```
 
-Claude will scrape your saved jobs, fetch every JD, analyze fit, and write notes back to LinkedIn automatically.
+That's it. Claude handles the rest — scraping, fetching JDs, analyzing, and writing notes back to LinkedIn.
 
-### Terminal usage (without Claude Code)
+### Running the scraper directly (without Claude Code)
 
-**Scrape saved jobs:**
+**Scrape saved jobs and print as JSON:**
 ```bash
 node scraper/linkedin_fetch.mjs
 ```
@@ -76,31 +85,27 @@ node scraper/linkedin_fetch.mjs
 node scraper/linkedin_fetch.mjs --add-notes /path/to/notes.json
 ```
 
-`notes.json` format:
+Where `notes.json` maps job URLs to note text:
 ```json
 {
   "https://www.linkedin.com/jobs/view/1234567890/": "⭐⭐⭐⭐⭐ Strong fit. Domain and level align well. Apply.",
-  "https://www.linkedin.com/jobs/view/9876543210/": "❌ Target language required. Hard blocker."
+  "https://www.linkedin.com/jobs/view/9876543210/": "❌ Language required. Hard blocker."
 }
 ```
 
-Notes are idempotent — re-running overwrites existing ones. If a run crashes mid-way, use a partial JSON with the remaining jobs and re-run.
+Notes are idempotent — re-running overwrites existing ones. If a run crashes mid-way, create a partial JSON with the remaining jobs and re-run.
+
+---
 
 ## Resume template
 
-`resume/resume-template.html` is a clean, single-page HTML resume template. Open it in any browser, fill in your details, then **Print → Save as PDF** to export.
+`resume/resume-template.html` is a clean single-page HTML resume. Open in any browser → **Print → Save as PDF** to export.
 
-If you already have a resume PDF, that works too — the job analyzer skill only needs your profile details from `job-analyzer/SKILL.md`, not an actual resume file.
+If you already have a resume PDF, you don't need this — the skill only reads your profile from `job-analyzer/SKILL.md`, not a file.
+
+---
 
 ## Session management
 
-- Session stored at `~/.claude/linkedin-session.json` — outside the repo, gitignored
-- To reset: delete the file and re-run; the login flow triggers again
-
-## Customising the job analyzer
-
-Edit `~/.claude/skills/job-analyzer/SKILL.md` and replace the placeholders with:
-- Your current role and key achievements
-- Your domain background and skills
-- Location and role-type preferences
-- Language rules (e.g. if applying in Norway: whether Norwegian is a hard disqualifier or just flagged as preferred)
+- Session stored at `~/.claude/linkedin-session.json` — outside the repo, never committed
+- If LinkedIn logs you out: delete that file and re-run the scraper. The login flow will trigger again.
