@@ -4,7 +4,7 @@ Two [Claude Code](https://claude.ai/code) skills that automate your LinkedIn job
 
 This toolkit provides four complementary skills:
 
-- **`/linkedin-jobs-fetch`** — Fetches all your saved jobs from LinkedIn, analyzes each against your profile, and writes verdicts directly as notes on every job card.
+- **`/linkedin-jobs-fetch`** — Fetches all your saved jobs from LinkedIn, analyzes each against your profile, and writes verdicts directly as notes on every job card (adding new notes or editing existing ones).
 - **`/linkedin-job-search`** — Actively discovers jobs matching your keywords + location, reads job descriptions, filters by fit, and saves top matches to LinkedIn's saved jobs.
 - **`/job-analyzer`** — Performs detailed per-job analysis including role suitability, visa requirements, relocation expectations, and domain fit. Great for deep-dive on a specific role.
 - **`/resume-cover-letter-generator`** — Generates tailored resume and cover letter PDFs for your top job picks, customized to each role's requirements.
